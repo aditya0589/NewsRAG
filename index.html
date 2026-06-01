@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NewsRAG — AI News Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #1a1916;
+    --bg-raised: #211f1c;
+    --bg-input:  #2a2825;
+    --border:    #3a3834;
+    --border-subtle: #2e2c29;
+    --text:      #e8e4dc;
+    --text-2:    #a09a90;
+    --text-3:    #6b6560;
+    --accent:    #d4a853;
+    --accent-2:  #e8c17a;
+    --accent-dim:#3d2f0f;
+    --green:     #5a9e6f;
+    --red:       #c45c5c;
+    --radius:    14px;
+    --radius-sm: 8px;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  /* layout */
+  .shell {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* header */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0 16px;
+    border-bottom: 0.5px solid var(--border-subtle);
+    flex-shrink: 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--accent-dim);
+    border: 0.5px solid var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .logo-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+
+  .logo-name span {
+    color: var(--accent);
+  }
+
+  .mode-toggle {
+    display: flex;
+    background: var(--bg-raised);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 3px;
+    gap: 2px;
+  }
+
+  .mode-btn {
+    padding: 5px 14px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: var(--text-3);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .mode-btn.active {
+    background: var(--bg-input);
+    color: var(--text);
+    border: 0.5px solid var(--border);
+  }
+
+  /* conversation area */
+  .conversation {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .conversation::-webkit-scrollbar { width: 4px; }
+  .conversation::-webkit-scrollbar-track { background: transparent; }
+  .conversation::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* empty state */
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+    padding: 40px 0;
+  }
+
+  .empty-icon {
+    width: 52px;
+    height: 52px;
+    background: var(--bg-raised);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+
+  .empty-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: var(--text);
+  }
+
+  .empty-sub {
+    font-size: 14px;
+    color: var(--text-3);
+    max-width: 340px;
+    line-height: 1.5;
+  }
+
+  .suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  .suggestion {
+    padding: 8px 14px;
+    background: var(--bg-raised);
+    border: 0.5px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .suggestion:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  /* message bubbles */
+  .msg {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    animation: fadeUp 0.3s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-user {
+    align-items: flex-end;
+  }
+
+  .msg-assistant {
+    align-items: flex-start;
+  }
+
+  .msg-label {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0 4px;
+  }
+
+  .bubble {
+    max-width: 88%;
+    padding: 13px 17px;
+    border-radius: var(--radius);
+    line-height: 1.7;
+    font-size: 14.5px;
+  }
+
+  .bubble-user {
+    background: var(--bg-raised);
+    border: 0.5px solid var(--border);
+    border-bottom-right-radius: 4px;
+    color: var(--text);
+  }
+
+  .bubble-assistant {
+    background: transparent;
+    color: var(--text);
+    padding: 4px 0;
+    max-width: 100%;
+  }
+
+  .bubble-assistant p { margin-bottom: 10px; }
+  .bubble-assistant p:last-child { margin-bottom: 0; }
+
+  /* typing cursor */
+  .typing-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--accent);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: blink 0.8s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  /* sources */
+  .sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 14px;
+  }
+
+  .source-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background: var(--bg-raised);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-2);
+    text-decoration: none;
+    transition: all 0.15s;
+    max-width: 220px;
+  }
+
+  .source-chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .source-chip-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .source-chip-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* quiz cards */
+  .quiz-wrap { display: flex; flex-direction: column; gap: 16px; }
+
+  .quiz-card {
+    background: var(--bg-raised);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+
+  .quiz-q {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .quiz-options { display: flex; flex-direction: column; gap: 7px; }
+
+  .quiz-opt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 13px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13.5px;
+    color: var(--text-2);
+    transition: all 0.15s;
+    background: var(--bg);
+  }
+
+  .quiz-opt:hover:not(.disabled) {
+    border-color: var(--accent);
+    color: var(--text);
+    background: var(--accent-dim);
+  }
+
+  .quiz-opt.correct  { border-color: var(--green); color: var(--green); background: #1a2e20; }
+  .quiz-opt.wrong    { border-color: var(--red);   color: var(--red);   background: #2e1a1a; }
+  .quiz-opt.disabled { cursor: default; }
+
+  .opt-letter {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: var(--bg-input);
+    border: 0.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500; font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  /* thinking indicator */
+  .thinking {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-3);
+    font-size: 13px;
+    padding: 4px 0;
+  }
+
+  .thinking-dots {
+    display: flex;
+    gap: 4px;
+  }
+
+  .thinking-dots span {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+    40%            { opacity: 1;   transform: scale(1); }
+  }
+
+  /* input area */
+  .input-area {
+    padding: 16px 0 24px;
+    flex-shrink: 0;
+  }
+
+  .input-box {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    background: var(--bg-input);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 12px 12px 16px;
+    transition: border-color 0.15s;
+  }
+
+  .input-box:focus-within {
+    border-color: var(--accent);
+  }
+
+  textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14.5px;
+    line-height: 1.6;
+    resize: none;
+    max-height: 140px;
+    min-height: 24px;
+    scrollbar-width: none;
+  }
+
+  textarea::placeholder { color: var(--text-3); }
+  textarea::-webkit-scrollbar { display: none; }
+
+  .send-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: var(--bg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .send-btn:hover:not(:disabled) { background: var(--accent-2); }
+  .send-btn:disabled { background: var(--bg-raised); color: var(--text-3); cursor: default; }
+
+  .send-btn svg { width: 16px; height: 16px; }
+
+  .input-hint {
+    font-size: 11.5px;
+    color: var(--text-3);
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  /* arch section */
+  .arch {
+    border-top: 0.5px solid var(--border-subtle);
+    padding: 28px 0 32px;
+    margin-top: 8px;
+  }
+
+  .arch-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .arch-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .arch-chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px;
+    background: var(--bg-raised);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--text-2);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .arch-chip-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  /* cached badge */
+  .cached-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--text-3);
+    margin-top: 8px;
+    padding: 3px 8px;
+    background: var(--bg-raised);
+    border-radius: 20px;
+    border: 0.5px solid var(--border-subtle);
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <header>
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-name">News<span>RAG</span></div>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="btn-answer" onclick="setMode('answer')">Answer</button>
+      <button class="mode-btn" id="btn-quiz" onclick="setMode('quiz')">Quiz</button>
+    </div>
+  </header>
+
+  <div class="conversation" id="conv">
+    <div class="empty-state" id="empty">
+      <div class="empty-icon">📡</div>
+      <div class="empty-title">What's happening today?</div>
+      <div class="empty-sub">Ask anything about current events in AI, technology, and global affairs — powered by live news.</div>
+      <div class="suggestions">
+        <div class="suggestion" onclick="useSuggestion(this)">Latest AI developments</div>
+        <div class="suggestion" onclick="useSuggestion(this)">What is happening in tech?</div>
+        <div class="suggestion" onclick="useSuggestion(this)">India economy news</div>
+        <div class="suggestion" onclick="useSuggestion(this)">Space exploration updates</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <div class="input-box">
+      <textarea
+        id="qinput"
+        placeholder="Ask about any current event…"
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"
+      ></textarea>
+      <button class="send-btn" id="sendbtn" onclick="submitQuery()" disabled>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 13V3M3 8l5-5 5 5"/>
+        </svg>
+      </button>
+    </div>
+    <div class="input-hint">Powered by Amazon Bedrock Nova Lite · FAISS · S3 · Lambda</div>
+  </div>
+
+  <div class="arch">
+    <div class="arch-title">How it's built</div>
+    <div class="arch-grid">
+      <div class="arch-chip"><div class="arch-chip-dot" style="background:#e8a03c"></div>EventBridge</div>
+      <div class="arch-chip"><div class="arch-chip-dot" style="background:#e8a03c"></div>Lambda</div>
+      <div class="arch-chip"><div class="arch-chip-dot" style="background:#5a9e6f"></div>S3 Data Lake</div>
+      <div class="arch-chip"><div class="arch-chip-dot" style="background:#5a9e6f"></div>FAISS Index</div>
+      <div class="arch-chip"><div class="arch-chip-dot" style="background:#6a8fd8"></div>Bedrock Titan Embed</div>
+      <div class="arch-chip"><div class="arch-chip-dot" style="background:#6a8fd8"></div>Nova Lite</div>
+      <div class="arch-chip"><div class="arch-chip-dot" style="background:#a06ad8"></div>DynamoDB Cache</div>
+      <div class="arch-chip"><div class="arch-chip-dot" style="background:#a06ad8"></div>API Gateway</div>
+      <div class="arch-chip"><div class="arch-chip-dot" style="background:#d85a5a"></div>CloudFront</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = "/api/query";
+  let currentMode = "answer";
+  let isLoading = false;
+
+  const input   = document.getElementById("qinput");
+  const sendBtn = document.getElementById("sendbtn");
+  const conv    = document.getElementById("conv");
+
+  input.addEventListener("input", () => {
+    sendBtn.disabled = input.value.trim() === "" || isLoading;
+  });
+
+  function setMode(m) {
+    currentMode = m;
+    document.getElementById("btn-answer").classList.toggle("active", m === "answer");
+    document.getElementById("btn-quiz").classList.toggle("active", m === "quiz");
+  }
+
+  function autoResize(el) {
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 140) + "px";
+  }
+
+  function handleKey(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (!sendBtn.disabled) submitQuery();
+    }
+  }
+
+  function useSuggestion(el) {
+    input.value = el.textContent;
+    autoResize(input);
+    sendBtn.disabled = false;
+    submitQuery();
+  }
+
+  function hideEmpty() {
+    const empty = document.getElementById("empty");
+    if (empty) empty.remove();
+  }
+
+  function appendUserMsg(text) {
+    hideEmpty();
+    const div = document.createElement("div");
+    div.className = "msg msg-user";
+    div.innerHTML = `
+      <div class="msg-label">You</div>
+      <div class="bubble bubble-user">${escHtml(text)}</div>
+    `;
+    conv.appendChild(div);
+    scrollBottom();
+  }
+
+  function appendThinking() {
+    const div = document.createElement("div");
+    div.className = "msg msg-assistant";
+    div.id = "thinking-msg";
+    div.innerHTML = `
+      <div class="msg-label">NewsRAG</div>
+      <div class="thinking">
+        <div class="thinking-dots"><span></span><span></span><span></span></div>
+        Searching and synthesising…
+      </div>
+    `;
+    conv.appendChild(div);
+    scrollBottom();
+  }
+
+  function removeThinking() {
+    const t = document.getElementById("thinking-msg");
+    if (t) t.remove();
+  }
+
+  function appendAssistantMsg(answer, sources, cached, mode) {
+    const div = document.createElement("div");
+    div.className = "msg msg-assistant";
+
+    const label = document.createElement("div");
+    label.className = "msg-label";
+    label.textContent = "NewsRAG";
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble bubble-assistant";
+
+    div.appendChild(label);
+    div.appendChild(bubble);
+    conv.appendChild(div);
+
+    if (mode === "quiz") {
+      renderQuiz(bubble, answer);
+    } else {
+      typeText(bubble, answer, sources, cached);
+    }
+
+    scrollBottom();
+  }
+
+  // ── typing effect ──────────────────────────────────────────────
+  function typeText(el, text, sources, cached) {
+    const cleaned = text
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\n\n/g, "§§")
+      .replace(/\n/g, " ")
+      .split("§§");
+
+    let paraIdx = 0;
+    let charIdx = 0;
+    let currentP = null;
+    let cursor = null;
+
+    function nextChar() {
+      if (paraIdx >= cleaned.length) {
+        if (cursor) cursor.remove();
+        if (sources && sources.length) renderSources(el, sources);
+        if (cached) {
+          const badge = document.createElement("div");
+          badge.className = "cached-badge";
+          badge.innerHTML = "⚡ cached response";
+          el.appendChild(badge);
+        }
+        setLoading(false);
+        return;
+      }
+
+      const para = cleaned[paraIdx];
+
+      if (charIdx === 0) {
+        if (cursor) cursor.remove();
+        currentP = document.createElement("p");
+        el.appendChild(currentP);
+        cursor = document.createElement("span");
+        cursor.className = "typing-cursor";
+        currentP.appendChild(cursor);
+      }
+
+      if (charIdx < para.length) {
+        // insert char before cursor
+        const chunk = para.slice(charIdx, charIdx + 3);
+        cursor.insertAdjacentHTML("beforebegin", chunk);
+        charIdx += 3;
+        scrollBottom();
+        setTimeout(nextChar, 12);
+      } else {
+        paraIdx++;
+        charIdx = 0;
+        setTimeout(nextChar, 60);
+      }
+    }
+
+    nextChar();
+  }
+
+  // ── sources ────────────────────────────────────────────────────
+  function renderSources(el, sources) {
+    if (!sources.length) return;
+    const wrap = document.createElement("div");
+    wrap.className = "sources";
+    sources.forEach(s => {
+      const a = document.createElement("a");
+      a.className = "source-chip";
+      a.href = s.url;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.innerHTML = `
+        <div class="source-chip-dot"></div>
+        <span class="source-chip-text">${escHtml(s.title || s.url)}</span>
+      `;
+      wrap.appendChild(a);
+    });
+    el.appendChild(wrap);
+  }
+
+  // ── quiz renderer ──────────────────────────────────────────────
+  function renderQuiz(el, raw) {
+    const blocks = raw.split(/\n(?=Q\d+\.)/).filter(Boolean);
+    const wrap = document.createElement("div");
+    wrap.className = "quiz-wrap";
+
+    blocks.forEach(block => {
+      const lines  = block.trim().split("\n").map(l => l.trim()).filter(Boolean);
+      const qLine  = lines.find(l => /^Q\d+\./.test(l)) || "";
+      const opts   = lines.filter(l => /^[A-D]\)/.test(l));
+      const ansLine= lines.find(l => /^Answer:/i.test(l)) || "";
+      const correct= ansLine.replace(/Answer:\s*/i, "").trim().charAt(0).toUpperCase();
+
+      if (!qLine || opts.length < 2) return;
+
+      const card = document.createElement("div");
+      card.className = "quiz-card";
+
+      const q = document.createElement("div");
+      q.className = "quiz-q";
+      q.textContent = qLine.replace(/^Q\d+\.\s*/, "");
+      card.appendChild(q);
+
+      const optsDiv = document.createElement("div");
+      optsDiv.className = "quiz-options";
+
+      opts.forEach(opt => {
+        const letter = opt.charAt(0);
+        const text   = opt.slice(3).trim();
+        const btn    = document.createElement("div");
+        btn.className = "quiz-opt";
+        btn.innerHTML = `<div class="opt-letter">${letter}</div> ${escHtml(text)}`;
+        btn.onclick = () => {
+          if (btn.classList.contains("disabled")) return;
+          optsDiv.querySelectorAll(".quiz-opt").forEach(b => {
+            b.classList.add("disabled");
+            if (b.querySelector(".opt-letter").textContent === correct)
+              b.classList.add("correct");
+          });
+          if (letter !== correct) btn.classList.add("wrong");
+        };
+        optsDiv.appendChild(btn);
+      });
+
+      card.appendChild(optsDiv);
+      wrap.appendChild(card);
+    });
+
+    el.appendChild(wrap);
+    setLoading(false);
+  }
+
+  // ── main submit ────────────────────────────────────────────────
+  async function submitQuery() {
+    const q = input.value.trim();
+    if (!q || isLoading) return;
+
+    setLoading(true);
+    appendUserMsg(q);
+    input.value = "";
+    input.style.height = "auto";
+    appendThinking();
+
+    try {
+      const res  = await fetch(API, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ query: q, mode: currentMode }),
+      });
+      const data = await res.json();
+      const body = typeof data.body === "string" ? JSON.parse(data.body) : data;
+
+      removeThinking();
+      appendAssistantMsg(
+        body.answer  || "No answer returned.",
+        body.sources || [],
+        body.cached  || false,
+        body.mode    || currentMode,
+      );
+    } catch (err) {
+      removeThinking();
+      appendAssistantMsg("Something went wrong. Please try again.", [], false, "answer");
+      setLoading(false);
+    }
+  }
+
+  function setLoading(val) {
+    isLoading = val;
+    sendBtn.disabled = val || input.value.trim() === "";
+  }
+
+  function scrollBottom() {
+    conv.scrollTop = conv.scrollHeight;
+  }
+
+  function escHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+</script>
+</body>
+</html>
