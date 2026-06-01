@@ -859,6 +859,137 @@
     .bio-link:hover {
       color: var(--accent);
     }
+
+    /* Mobile Optimizations */
+    @media (max-width: 600px) {
+      .shell {
+        padding: 0 16px;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 0;
+      }
+
+      .logo {
+        margin-bottom: 2px;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .mode-toggle {
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* Chat container tweaks */
+      .conversation {
+        padding: 16px 0;
+        gap: 20px;
+      }
+
+      .bubble {
+        max-width: 95%;
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+
+      .input-area {
+        padding: 12px 0 16px;
+      }
+
+      .input-box {
+        padding: 8px 8px 8px 12px;
+        border-radius: 12px;
+      }
+
+      textarea {
+        font-size: 14.5px; /* Keeps input legible and prevents iOS auto-zoom */
+      }
+
+      .send-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+      }
+
+      /* Architecture chips */
+      .arch {
+        padding: 20px 0 24px;
+      }
+
+      .arch-title {
+        font-size: 16px;
+        margin-bottom: 12px;
+      }
+
+      .arch-grid {
+        gap: 6px;
+      }
+
+      .arch-chip {
+        padding: 4px 8px;
+        font-size: 11px;
+      }
+
+      /* About page tweaks */
+      .about-page {
+        padding: 20px 0 32px;
+        gap: 28px;
+      }
+
+      .about-title {
+        font-size: 28px;
+      }
+
+      .about-subtitle {
+        font-size: 14px;
+      }
+
+      .about-section-title {
+        font-size: 20px;
+      }
+
+      .diagram-container {
+        padding: 12px;
+      }
+
+      .about-card {
+        padding: 16px;
+      }
+
+      .about-card-title {
+        font-size: 15px;
+      }
+
+      .about-card-desc {
+        font-size: 13px;
+      }
+
+      .bio-container {
+        padding: 16px;
+        gap: 16px;
+      }
+
+      .bio-avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 28px;
+      }
+
+      .bio-name {
+        font-size: 18px;
+      }
+
+      .bio-text {
+        font-size: 13px;
+      }
+    }
   </style>
 </head>
 
