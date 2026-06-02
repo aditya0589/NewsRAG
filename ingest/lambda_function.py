@@ -15,16 +15,16 @@ s3        = boto3.client("s3",              region_name="us-east-1")
 bedrock   = boto3.client("bedrock-runtime", region_name="us-east-1")
 sm        = boto3.client("secretsmanager",  region_name="us-east-1")
 
-S3_BUCKET   = os.environ["S3_BUCKET"]    # itvidyarthi-rag-store
-SECRET_NAME = os.environ["SECRET_NAME"]  # itvidyarthi/newsapi-key
+S3_BUCKET   = os.environ["S3_BUCKET"].strip()    # itvidyarthi-rag-store
+SECRET_NAME = os.environ["SECRET_NAME"].strip()  # itvidyarthi/newsapi-key
 
 TOPICS = [
     "Global Geopolitics",
+    "Business and Finance",
+    "Sports",
+    "Science and Technology",
+    "Entertainment",
     "Artificial Intelligence",
-    "science and technology",
-    "international relations India",
-    "Computer Science trending",
-    "Generative AI",
 ]
 
 CHUNK_SIZE = 300   # characters per chunk (≈ 60-80 tokens)
@@ -45,7 +45,7 @@ def fetch_articles(api_key):
         url     = (
             f"https://newsapi.org/v2/everything"
             f"?q={query}&language=en&sortBy=publishedAt"
-            f"&pageSize=10&apiKey={api_key}"
+            f"&pageSize=5&apiKey={api_key}"
         )
         req  = urllib.request.Request(url)
         with urllib.request.urlopen(req, timeout=10) as resp:

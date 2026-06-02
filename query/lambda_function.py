@@ -11,8 +11,8 @@ s3       = boto3.client("s3",              region_name="us-east-1")
 bedrock  = boto3.client("bedrock-runtime", region_name="us-east-1")
 dynamo   = boto3.resource("dynamodb",      region_name="us-east-1")
 
-S3_BUCKET      = os.environ["S3_BUCKET"]       # itvidyarthi-rag-store
-DYNAMODB_TABLE = os.environ["DYNAMODB_TABLE"]  # rag-response-cache
+S3_BUCKET      = os.environ["S3_BUCKET"].strip()       # itvidyarthi-rag-store
+DYNAMODB_TABLE = os.environ["DYNAMODB_TABLE"].strip()  # rag-response-cache
 
 table = dynamo.Table(DYNAMODB_TABLE)
 
@@ -22,11 +22,11 @@ _metadata    = None
 
 TOPICS = [
     "Global Geopolitics",
+    "Business and Finance",
+    "Sports",
+    "Science and Technology",
+    "Entertainment",
     "Artificial Intelligence",
-    "science and technology",
-    "international relations India",
-    "Computer Science trending",
-    "Generative AI",
 ]
 
 # ── 1. load index from s3 into /tmp (cold start only) ─────────────
