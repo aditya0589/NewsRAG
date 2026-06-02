@@ -59,6 +59,7 @@ def fetch_articles(api_key):
                 "url":         a["url"],
                 "date":        a.get("publishedAt", "")[:10],
                 "source":      a.get("source", {}).get("name", ""),
+                "topic":       topic,
                 "content":     (a.get("description") or "")
                                + " " +
                                (a.get("content")     or ""),
@@ -158,6 +159,7 @@ def handler(event, context):
                 "url":        article["url"],
                 "date":       article["date"],
                 "source":     article["source"],
+                "topic":      article.get("topic", ""),
             })
 
     if not all_vectors:

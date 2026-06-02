@@ -56,6 +56,7 @@
       pointer-events: none;
       z-index: 9999;
       opacity: 0.6;
+      display: block;
     }
 
     /* layout */
@@ -768,26 +769,6 @@
       min-height: 300px;
     }
 
-    .diagram-placeholder {
-      width: 100%;
-      max-width: 680px;
-      border: 1px dashed var(--border);
-      border-radius: var(--radius-sm);
-      padding: 40px 20px;
-      background: var(--bg-input);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .diagram-placeholder:hover {
-      border-color: var(--accent);
-      background: var(--accent-dim);
-    }
-
     /* Bio Section */
     .bio-container {
       display: flex;
@@ -860,6 +841,743 @@
       color: var(--accent);
     }
 
+    /* Auth Styles */
+    .auth-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      width: 100%;
+      background: var(--bg);
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: var(--bg-raised);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      animation: fadeUp 0.4s ease;
+    }
+
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .auth-logo-icon {
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      background: var(--accent-dim);
+      border: 0.5px solid var(--accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-logo-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 32px;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+
+    .auth-logo-title span {
+      color: var(--accent);
+    }
+
+    .auth-tabs {
+      display: flex;
+      border-bottom: 0.5px solid var(--border-subtle);
+      margin-bottom: 24px;
+      gap: 16px;
+    }
+
+    .auth-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-3);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 8px 4px 12px;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.15s;
+    }
+
+    .auth-tab:hover {
+      color: var(--text-2);
+    }
+
+    .auth-tab.active {
+      color: var(--accent);
+    }
+
+    .auth-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-2);
+    }
+
+    .form-group input {
+      background: var(--bg-input);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14.5px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .form-group input:focus {
+      border-color: var(--accent);
+    }
+
+    /* Topic selector grid */
+    .topic-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .topic-pill, .topic-pill-modal {
+      padding: 10px 12px;
+      background: var(--bg-input);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+
+    .topic-pill:hover, .topic-pill-modal:hover {
+      border-color: var(--text-3);
+      color: var(--text);
+    }
+
+    .topic-pill.active, .topic-pill-modal.active {
+      border-color: var(--accent);
+      color: var(--accent-2);
+      background: var(--accent-dim);
+    }
+
+    .pill-check {
+      display: none;
+      font-weight: bold;
+      color: var(--accent);
+    }
+
+    .topic-pill.active .pill-check, .topic-pill-modal.active .pill-check {
+      display: inline;
+    }
+
+    .label-hint {
+      font-size: 11px;
+      color: var(--text-3);
+      font-weight: normal;
+      margin-left: 4px;
+    }
+
+    .auth-error {
+      color: var(--red);
+      font-size: 12px;
+      background: rgba(196, 92, 92, 0.1);
+      border: 0.5px solid var(--red);
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      display: none;
+    }
+
+    .auth-btn {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-size: 14.5px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-top: 8px;
+    }
+
+    .auth-btn:hover {
+      background: var(--accent-2);
+    }
+
+    /* Header modifications */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-profile-menu {
+      position: relative;
+    }
+
+    .user-info-trigger {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 12px;
+      background: var(--bg-raised);
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.15s;
+    }
+
+    .user-info-trigger:hover {
+      border-color: var(--accent);
+    }
+
+    .user-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 0.5px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .user-text-details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.2;
+    }
+
+    .user-name-span {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .user-quota-span {
+      font-size: 10px;
+      color: var(--text-3);
+    }
+
+    .dropdown-chevron {
+      font-size: 8px;
+      color: var(--text-3);
+      margin-left: 2px;
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--bg-raised);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      width: 160px;
+      padding: 4px;
+      display: none;
+      flex-direction: column;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 1000;
+      animation: fadeUp 0.15s ease;
+    }
+
+    .user-dropdown.show {
+      display: flex;
+    }
+
+    .dropdown-item {
+      padding: 8px 12px;
+      font-size: 13px;
+      color: var(--text-2);
+      background: transparent;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.15s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .dropdown-item:hover {
+      background: var(--bg-input);
+      color: var(--text);
+    }
+
+    .dropdown-item.logout {
+      color: var(--red);
+    }
+
+    .dropdown-item.logout:hover {
+      background: rgba(196, 92, 92, 0.1);
+    }
+
+    /* Briefing Styles */
+    .briefing-page {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 0 40px;
+      display: flex;
+      flex-direction: column;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .briefing-page::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .briefing-page::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .briefing-page::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    .briefing-container {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .briefing-hero {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .briefing-date {
+      font-size: 12px;
+      font-family: 'DM Mono', monospace;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .briefing-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 40px;
+      line-height: 1.1;
+      color: var(--text);
+    }
+
+    .briefing-subtitle {
+      font-size: 15px;
+      color: var(--text-2);
+      max-width: 600px;
+    }
+
+    .preferences-summary-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+      padding: 10px 14px;
+      background: var(--bg-raised);
+      border: 0.5px solid var(--border-subtle);
+      border-radius: 10px;
+      width: fit-content;
+    }
+
+    .pref-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .pref-chips-list {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .pref-chip {
+      padding: 3px 10px;
+      background: var(--bg-input);
+      border: 0.5px solid var(--border);
+      border-radius: 20px;
+      font-size: 11.5px;
+      color: var(--text-2);
+    }
+
+    .edit-pref-btn-sub {
+      background: transparent;
+      border: none;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 2px 6px;
+    }
+
+    .edit-pref-btn-sub:hover {
+      color: var(--accent-2);
+    }
+
+    .briefing-card {
+      background: var(--bg-raised);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .briefing-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 0.5px solid var(--border-subtle);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+
+    .briefing-card-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .briefing-card-sparkle {
+      color: var(--accent);
+      font-size: 18px;
+    }
+
+    .briefing-card-title-wrap h2 {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .regenerate-btn {
+      padding: 6px 12px;
+      background: var(--bg-input);
+      border: 0.5px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-2);
+      font-size: 12.5px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .regenerate-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .briefing-body-content {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .briefing-body-content h3 {
+      font-size: 16px;
+      color: var(--accent);
+      margin-top: 20px;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .briefing-body-content h3:first-of-type {
+      margin-top: 0;
+    }
+
+    .briefing-body-content p {
+      margin-bottom: 12px;
+    }
+
+    .briefing-body-content ul {
+      margin-bottom: 16px;
+      padding-left: 20px;
+    }
+
+    .briefing-body-content li {
+      margin-bottom: 6px;
+    }
+
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 48px 0;
+      color: var(--text-3);
+      font-size: 14px;
+    }
+
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Articles Grid Feed */
+    .articles-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .articles-section-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px;
+      color: var(--text);
+    }
+
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .article-card {
+      background: var(--bg-raised);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+
+    .article-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .article-header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .article-topic {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: 2px 8px;
+      border-radius: 4px;
+      width: fit-content;
+      text-transform: uppercase;
+    }
+
+    .article-title {
+      font-size: 14.5px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--text);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .article-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-3);
+    }
+
+    .article-link {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .article-link:hover {
+      color: var(--accent-2);
+      text-decoration: underline;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: var(--bg-raised);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      animation: fadeUp 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 0.5px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      color: var(--text-3);
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+    }
+
+    .modal-body {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-desc {
+      font-size: 13.5px;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 0.5px solid var(--border-subtle);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .modal-cancel-btn {
+      background: transparent;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 16px;
+      font-size: 13.5px;
+      color: var(--text-2);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .modal-cancel-btn:hover {
+      border-color: var(--text-3);
+      color: var(--text);
+    }
+
+    .modal-save-btn {
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 8px 16px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--bg);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .modal-save-btn:hover {
+      background: var(--accent-2);
+    }
+
+    /* Lockout status */
+    .quota-warning-banner {
+      background: rgba(196, 92, 92, 0.15);
+      border: 0.5px solid var(--red);
+      color: #ff8888;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
     /* Mobile Optimizations */
     @media (max-width: 600px) {
       .shell {
@@ -882,8 +1600,13 @@
         justify-content: center;
       }
 
-      .mode-toggle {
+      .header-right {
         width: 100%;
+        justify-content: space-between;
+      }
+
+      .mode-toggle {
+        flex: 1;
         justify-content: center;
       }
 
@@ -909,7 +1632,7 @@
       }
 
       textarea {
-        font-size: 14.5px; /* Keeps input legible and prevents iOS auto-zoom */
+        font-size: 14.5px;
       }
 
       .send-btn {
@@ -989,29 +1712,175 @@
       .bio-text {
         font-size: 13px;
       }
+
+      .topic-selector-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="shell">
+  <!-- Auth Screen -->
+  <div class="auth-container" id="auth-screen">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="auth-logo-icon">⚡</span>
+        <h2 class="auth-logo-title">News<span>RAG</span></h2>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login-btn" onclick="toggleAuthTab('login')">Sign In</button>
+        <button class="auth-tab" id="tab-register-btn" onclick="toggleAuthTab('register')">Create Account</button>
+      </div>
+      
+      <!-- Login Form -->
+      <form id="login-form" onsubmit="handleLogin(event)" class="auth-form">
+        <div class="form-group">
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" placeholder="Enter username..." required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="Enter password..." required autocomplete="current-password">
+        </div>
+        <div id="login-error" class="auth-error"></div>
+        <button type="submit" class="auth-btn" id="login-btn">
+          Sign In
+        </button>
+      </form>
+      
+      <!-- Register Form -->
+      <form id="register-form" onsubmit="handleRegister(event)" class="auth-form" style="display: none;">
+        <div class="form-group">
+          <label for="register-username">Username</label>
+          <input type="text" id="register-username" placeholder="Choose a username..." required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="register-password">Password</label>
+          <input type="password" id="register-password" placeholder="Create a password..." required autocomplete="new-password">
+        </div>
+        
+        <div class="form-group">
+          <label>Select Preferred Topics <span class="label-hint">(Select at least one)</span></label>
+          <div class="topic-selector-grid">
+            <div class="topic-pill" data-topic="Global Geopolitics" onclick="toggleTopicPill(this)">
+              <span class="pill-check">✓</span> 🌐 Global Geopolitics
+            </div>
+            <div class="topic-pill" data-topic="Artificial Intelligence" onclick="toggleTopicPill(this)">
+              <span class="pill-check">✓</span> 🤖 Artificial Intelligence
+            </div>
+            <div class="topic-pill" data-topic="science and technology" onclick="toggleTopicPill(this)">
+              <span class="pill-check">✓</span> 🔬 Science & Tech
+            </div>
+            <div class="topic-pill" data-topic="international relations India" onclick="toggleTopicPill(this)">
+              <span class="pill-check">✓</span> 🇮🇳 Intl. Relations
+            </div>
+            <div class="topic-pill" data-topic="Computer Science trending" onclick="toggleTopicPill(this)">
+              <span class="pill-check">✓</span> 💻 CS Trends
+            </div>
+            <div class="topic-pill" data-topic="Generative AI" onclick="toggleTopicPill(this)">
+              <span class="pill-check">✓</span> 🎨 Generative AI
+            </div>
+          </div>
+        </div>
+        
+        <div id="register-error" class="auth-error"></div>
+        <button type="submit" class="auth-btn" id="register-btn">
+          Create Account
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Application Shell -->
+  <div class="shell" id="app-shell" style="display: none;">
     <header>
-      <div class="logo" onclick="showTab('chat')" style="cursor: pointer;">
+      <div class="logo" onclick="showTab('briefing')" style="cursor: pointer;">
         <div class="logo-icon">⚡</div>
         <div class="logo-name">News<span>RAG</span></div>
       </div>
       <nav class="nav-links">
-        <button class="nav-btn active" id="nav-chat" onclick="showTab('chat')">Chat</button>
+        <button class="nav-btn active" id="nav-briefing" onclick="showTab('briefing')">Daily Briefing</button>
+        <button class="nav-btn" id="nav-chat" onclick="showTab('chat')">AI Assistant</button>
         <button class="nav-btn" id="nav-about" onclick="showTab('about')">About</button>
       </nav>
-      <div class="mode-toggle" id="header-mode-toggle">
-        <button class="mode-btn active" id="btn-answer" onclick="setMode('answer')">Answer</button>
-        <button class="mode-btn" id="btn-quiz" onclick="setMode('quiz')">Quiz</button>
+      
+      <div class="header-right">
+        <div class="mode-toggle" id="header-mode-toggle" style="display: none;">
+          <button class="mode-btn active" id="btn-answer" onclick="setMode('answer')">Answer</button>
+          <button class="mode-btn" id="btn-quiz" onclick="setMode('quiz')">Quiz</button>
+        </div>
+        
+        <div class="user-profile-menu">
+          <div class="user-info-trigger" onclick="toggleUserDropdown()">
+            <div class="user-avatar" id="header-avatar">👤</div>
+            <div class="user-text-details">
+              <div class="user-name-span" id="header-username">Guest</div>
+              <div class="user-quota-span" id="header-quota">Queries: 5/5</div>
+            </div>
+            <span class="dropdown-chevron">▼</span>
+          </div>
+          <div class="user-dropdown" id="user-dropdown-menu">
+            <button class="dropdown-item" onclick="openPreferencesModal()">
+              ⚙️ Edit Topics
+            </button>
+            <button class="dropdown-item logout" onclick="handleLogout()">
+              🚪 Sign Out
+            </button>
+          </div>
+        </div>
       </div>
     </header>
 
-    <div class="conversation" id="conv">
+    <!-- Daily Briefing Page -->
+    <div class="briefing-page" id="briefing-page" style="display: flex;">
+      <div class="briefing-container">
+        <div class="briefing-hero">
+          <div class="briefing-date" id="briefing-date-lbl">June 2, 2026</div>
+          <h1 class="briefing-title">Your AI News Intelligence</h1>
+          <p class="briefing-subtitle">A customized daily digest synthesized from live global news matching your interest profile.</p>
+          
+          <div class="preferences-summary-row">
+            <span class="pref-label">My Topics:</span>
+            <div class="pref-chips-list" id="briefing-pref-list">
+              <!-- Dynamically populated -->
+            </div>
+            <button class="edit-pref-btn-sub" onclick="openPreferencesModal()">Edit</button>
+          </div>
+        </div>
+        
+        <div class="briefing-card">
+          <div class="briefing-card-header">
+            <div class="briefing-card-title-wrap">
+              <span class="briefing-card-sparkle">✦</span>
+              <h2>Daily Synthesized Briefing</h2>
+            </div>
+            <button class="regenerate-btn" onclick="fetchPersonalizedBriefing(true)">
+              🔄 Refresh Brief
+            </button>
+          </div>
+          
+          <div class="briefing-body-content" id="briefing-content">
+            <div class="loading-state">
+              <div class="spinner"></div>
+              <span>Synthesizing your custom daily briefing...</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Latest Articles Feed -->
+        <div class="articles-section">
+          <h2 class="articles-section-title">Latest Articles For You</h2>
+          <div class="articles-grid" id="articles-feed">
+            <!-- Curated articles will be injected here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Assistant Tab (Original Chat Layout) -->
+    <div class="conversation" id="conv" style="display: none;">
       <div class="empty-state" id="empty">
         <div class="empty-icon">📡</div>
         <div class="empty-title">What's happening today?</div>
@@ -1026,7 +1895,7 @@
       </div>
     </div>
 
-    <div class="input-area">
+    <div class="input-area" style="display: none;">
       <div class="input-box">
         <textarea id="qinput" placeholder="Ask about any current event…" rows="1" onkeydown="handleKey(event)"
           oninput="autoResize(this)"></textarea>
@@ -1040,7 +1909,7 @@
       <div class="input-hint">Powered by Amazon Bedrock Nova Lite · FAISS · S3 · Lambda</div>
     </div>
 
-    <div class="arch">
+    <div class="arch" style="display: none;">
       <div class="arch-title">How it's built</div>
       <div class="arch-grid">
         <div class="arch-chip">
@@ -1070,6 +1939,7 @@
       </div>
     </div>
 
+    <!-- About Tab -->
     <div class="about-page" id="about-page" style="display: none;">
       <div class="about-hero">
         <h1 class="about-title">About NewsRAG</h1>
@@ -1135,26 +2005,547 @@
     </div>
   </div>
 
+  <!-- Preferences Edit Modal -->
+  <div class="modal-overlay" id="pref-modal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Edit Topic Preferences</h2>
+        <button class="modal-close" onclick="closePreferencesModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Choose which topics you want to include in your daily briefing and custom assistant scope.</p>
+        <div class="topic-selector-grid">
+          <div class="topic-pill-modal" data-topic="Global Geopolitics" onclick="toggleModalTopicPill(this)">
+            <span class="pill-check">✓</span> 🌐 Global Geopolitics
+          </div>
+          <div class="topic-pill-modal" data-topic="Artificial Intelligence" onclick="toggleModalTopicPill(this)">
+            <span class="pill-check">✓</span> 🤖 Artificial Intelligence
+          </div>
+          <div class="topic-pill-modal" data-topic="science and technology" onclick="toggleModalTopicPill(this)">
+            <span class="pill-check">✓</span> 🔬 Science & Tech
+          </div>
+          <div class="topic-pill-modal" data-topic="international relations India" onclick="toggleModalTopicPill(this)">
+            <span class="pill-check">✓</span> 🇮🇳 Intl. Relations
+          </div>
+          <div class="topic-pill-modal" data-topic="Computer Science trending" onclick="toggleModalTopicPill(this)">
+            <span class="pill-check">✓</span> 💻 CS Trends
+          </div>
+          <div class="topic-pill-modal" data-topic="Generative AI" onclick="toggleModalTopicPill(this)">
+            <span class="pill-check">✓</span> 🎨 Generative AI
+          </div>
+        </div>
+        <div id="modal-error" class="auth-error"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-cancel-btn" onclick="closePreferencesModal()">Cancel</button>
+        <button class="modal-save-btn" onclick="saveNewPreferences()">Save Preferences</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const API = "/api/query";
     let currentMode = "answer";
     let isLoading = false;
+    let currentUser = null;
+    let selectedRegTopics = [];
+    let selectedModalTopics = [];
+
+    // On Load
+    window.addEventListener("DOMContentLoaded", () => {
+      // Close dropdown on click outside
+      window.addEventListener("click", (e) => {
+        if (!e.target.closest(".user-profile-menu")) {
+          document.getElementById("user-dropdown-menu").classList.remove("show");
+        }
+      });
+      
+      initSession();
+    });
+
+    function initSession() {
+      const stored = localStorage.getItem("newsrag_session");
+      if (stored) {
+        try {
+          currentUser = JSON.parse(stored);
+          showApp();
+        } catch (e) {
+          localStorage.removeItem("newsrag_session");
+          showAuth();
+        }
+      } else {
+        showAuth();
+      }
+    }
+
+    function showAuth() {
+      document.getElementById("auth-screen").style.display = "flex";
+      document.getElementById("app-shell").style.display = "none";
+    }
+
+    function showApp() {
+      document.getElementById("auth-screen").style.display = "none";
+      document.getElementById("app-shell").style.display = "flex";
+      
+      // Update header
+      document.getElementById("header-username").textContent = currentUser.username;
+      updateQuotaDisplay();
+      
+      // Load briefing page by default
+      showTab("briefing");
+    }
+
+    function updateQuotaDisplay() {
+      const quotaEl = document.getElementById("header-quota");
+      const isAdmin = currentUser.username.toLowerCase() === "admin";
+      
+      if (isAdmin) {
+        quotaEl.textContent = "Queries: Unlimited";
+      } else {
+        const remaining = Math.max(0, 5 - currentUser.queries_used);
+        quotaEl.textContent = `Queries: ${remaining}/5 remaining`;
+        
+        // If locked out, show warning banner in chat tab and lock input
+        checkQueryLockout();
+      }
+    }
+
+    function checkQueryLockout() {
+      const isAdmin = currentUser.username.toLowerCase() === "admin";
+      const isLocked = !isAdmin && currentUser.queries_used >= 5;
+      
+      const qInput = document.getElementById("qinput");
+      const sendBtn = document.getElementById("sendbtn");
+      
+      // Remove any existing banner
+      const existingBanner = document.getElementById("quota-banner");
+      if (existingBanner) existingBanner.remove();
+      
+      if (isLocked) {
+        qInput.disabled = true;
+        qInput.placeholder = "Query limit reached (5 demo chances used).";
+        sendBtn.disabled = true;
+        
+        // Add banner above the input-box
+        const banner = document.createElement("div");
+        banner.className = "quota-warning-banner";
+        banner.id = "quota-banner";
+        banner.innerHTML = "<strong>Limit Reached:</strong> You have used all 5 demo query chances. Please register a new user, log in as admin, or edit preferences to view daily news.";
+        document.querySelector(".input-area").insertBefore(banner, document.querySelector(".input-box"));
+      } else {
+        qInput.disabled = false;
+        qInput.placeholder = "Ask about any current event…";
+        sendBtn.disabled = qInput.value.trim() === "" || isLoading;
+      }
+    }
+
+    function toggleAuthTab(tab) {
+      document.getElementById("tab-login-btn").classList.toggle("active", tab === "login");
+      document.getElementById("tab-register-btn").classList.toggle("active", tab === "register");
+      
+      document.getElementById("login-form").style.display = tab === "login" ? "flex" : "none";
+      document.getElementById("register-form").style.display = tab === "register" ? "flex" : "none";
+      
+      document.getElementById("login-error").style.display = "none";
+      document.getElementById("register-error").style.display = "none";
+    }
+
+    function toggleTopicPill(el) {
+      const topic = el.getAttribute("data-topic");
+      el.classList.toggle("active");
+      
+      if (el.classList.contains("active")) {
+        if (!selectedRegTopics.includes(topic)) {
+          selectedRegTopics.push(topic);
+        }
+      } else {
+        selectedRegTopics = selectedRegTopics.filter(t => t !== topic);
+      }
+    }
+
+    function toggleModalTopicPill(el) {
+      const topic = el.getAttribute("data-topic");
+      el.classList.toggle("active");
+      
+      if (el.classList.contains("active")) {
+        if (!selectedModalTopics.includes(topic)) {
+          selectedModalTopics.push(topic);
+        }
+      } else {
+        selectedModalTopics = selectedModalTopics.filter(t => t !== topic);
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const userEl = document.getElementById("login-username");
+      const passEl = document.getElementById("login-password");
+      const errorEl = document.getElementById("login-error");
+      const btn = document.getElementById("login-btn");
+      
+      const username = userEl.value.trim();
+      const password = passEl.value.trim();
+      
+      errorEl.style.display = "none";
+      btn.disabled = true;
+      btn.textContent = "Signing In...";
+      
+      try {
+        const res = await fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "login",
+            username: username,
+            password: password
+          })
+        });
+        
+        const data = await res.json();
+        const body = typeof data.body === "string" ? JSON.parse(data.body) : data;
+        
+        if (res.status === 200 && body.success) {
+          currentUser = {
+            username: body.username,
+            token: body.token,
+            preferences: body.preferences,
+            queries_used: body.queries_used
+          };
+          localStorage.setItem("newsrag_session", JSON.stringify(currentUser));
+          
+          userEl.value = "";
+          passEl.value = "";
+          showApp();
+        } else {
+          errorEl.textContent = body.error || "Login failed. Please check your credentials.";
+          errorEl.style.display = "block";
+        }
+      } catch (err) {
+        errorEl.textContent = "Failed to connect to backend server.";
+        errorEl.style.display = "block";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Sign In";
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const userEl = document.getElementById("register-username");
+      const passEl = document.getElementById("register-password");
+      const errorEl = document.getElementById("register-error");
+      const btn = document.getElementById("register-btn");
+      
+      const username = userEl.value.trim();
+      const password = passEl.value.trim();
+      
+      errorEl.style.display = "none";
+      
+      if (selectedRegTopics.length === 0) {
+        errorEl.textContent = "Please select at least one preferred topic.";
+        errorEl.style.display = "block";
+        return;
+      }
+      
+      btn.disabled = true;
+      btn.textContent = "Registering...";
+      
+      try {
+        const res = await fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "register",
+            username: username,
+            password: password,
+            preferences: selectedRegTopics
+          })
+        });
+        
+        const data = await res.json();
+        const body = typeof data.body === "string" ? JSON.parse(data.body) : data;
+        
+        if (res.status === 200 && body.success) {
+          btn.textContent = "Signing In...";
+          const loginRes = await fetch(API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "login",
+              username: username,
+              password: password
+            })
+          });
+          const loginData = await loginRes.json();
+          const loginBody = typeof loginData.body === "string" ? JSON.parse(loginData.body) : loginData;
+          
+          if (loginRes.status === 200 && loginBody.success) {
+            currentUser = {
+              username: loginBody.username,
+              token: loginBody.token,
+              preferences: loginBody.preferences,
+              queries_used: loginBody.queries_used
+            };
+            localStorage.setItem("newsrag_session", JSON.stringify(currentUser));
+            
+            userEl.value = "";
+            passEl.value = "";
+            showApp();
+          } else {
+            toggleAuthTab("login");
+            document.getElementById("login-error").textContent = "Registration succeeded! Please log in.";
+            document.getElementById("login-error").style.display = "block";
+          }
+        } else {
+          errorEl.textContent = body.error || "Registration failed. Try another username.";
+          errorEl.style.display = "block";
+        }
+      } catch (err) {
+        errorEl.textContent = "Failed to connect to backend server.";
+        errorEl.style.display = "block";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Create Account";
+      }
+    }
+
+    function toggleUserDropdown() {
+      document.getElementById("user-dropdown-menu").classList.toggle("show");
+    }
+
+    function handleLogout() {
+      localStorage.removeItem("newsrag_session");
+      currentUser = null;
+      document.getElementById("conv").innerHTML = `
+      <div class="empty-state" id="empty">
+        <div class="empty-icon">📡</div>
+        <div class="empty-title">What's happening today?</div>
+        <div class="empty-sub">Ask anything about current events in AI, technology, and global affairs — powered by live news.</div>
+        <div class="suggestions">
+          <div class="suggestion" onclick="useSuggestion(this)">Latest AI developments</div>
+          <div class="suggestion" onclick="useSuggestion(this)">What is happening in tech?</div>
+          <div class="suggestion" onclick="useSuggestion(this)">India economy news</div>
+          <div class="suggestion" onclick="useSuggestion(this)">Space exploration updates</div>
+        </div>
+      </div>
+      `;
+      showAuth();
+    }
 
     function showTab(tab) {
-      const isChat = tab === 'chat';
-      document.getElementById("nav-chat").classList.toggle("active", isChat);
-      document.getElementById("nav-about").classList.toggle("active", !isChat);
-      document.getElementById("conv").style.display = isChat ? "flex" : "none";
-      document.querySelector(".input-area").style.display = isChat ? "block" : "none";
-      document.querySelector(".arch").style.display = isChat ? "block" : "none";
-      document.getElementById("header-mode-toggle").style.display = isChat ? "flex" : "none";
-      document.getElementById("about-page").style.display = isChat ? "none" : "flex";
+      const tabs = ["briefing", "chat", "about"];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`nav-${t}`);
+        if (btn) btn.classList.toggle("active", t === tab);
+      });
+      
+      document.getElementById("briefing-page").style.display = tab === "briefing" ? "flex" : "none";
+      document.getElementById("conv").style.display = tab === "chat" ? "flex" : "none";
+      document.querySelector(".input-area").style.display = tab === "chat" ? "block" : "none";
+      document.querySelector(".arch").style.display = tab === "chat" ? "block" : "none";
+      document.getElementById("header-mode-toggle").style.display = tab === "chat" ? "flex" : "none";
+      document.getElementById("about-page").style.display = tab === "about" ? "none" : "flex";
+      
+      if (tab === "briefing" && currentUser) {
+        fetchPersonalizedBriefing();
+      }
+      
+      if (tab === "chat" && currentUser) {
+        checkQueryLockout();
+      }
     }
 
-    function openDiagramLink() {
-      window.open("https://github.com/aditya0589/NewsRAG", "_blank");
+    function openPreferencesModal() {
+      selectedModalTopics = [...currentUser.preferences];
+      
+      // Highlight pills
+      document.querySelectorAll(".topic-pill-modal").forEach(pill => {
+        const topic = pill.getAttribute("data-topic");
+        const isActive = selectedModalTopics.includes(topic);
+        pill.classList.toggle("active", isActive);
+      });
+      
+      document.getElementById("modal-error").style.display = "none";
+      document.getElementById("pref-modal").style.display = "flex";
     }
 
+    function closePreferencesModal() {
+      document.getElementById("pref-modal").style.display = "none";
+    }
+
+    async function saveNewPreferences() {
+      const errorEl = document.getElementById("modal-error");
+      errorEl.style.display = "none";
+      
+      if (selectedModalTopics.length === 0) {
+        errorEl.textContent = "Please select at least one topic.";
+        errorEl.style.display = "block";
+        return;
+      }
+      
+      try {
+        const res = await fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "update_preferences",
+            username: currentUser.username,
+            token: currentUser.token,
+            preferences: selectedModalTopics
+          })
+        });
+        
+        const data = await res.json();
+        const body = typeof data.body === "string" ? JSON.parse(data.body) : data;
+        
+        if (res.status === 200 && body.success) {
+          currentUser.preferences = body.preferences;
+          localStorage.setItem("newsrag_session", JSON.stringify(currentUser));
+          closePreferencesModal();
+          
+          // Refetch daily briefing with new preferences
+          fetchPersonalizedBriefing(true);
+        } else {
+          errorEl.textContent = body.error || "Failed to update preferences.";
+          errorEl.style.display = "block";
+        }
+      } catch (err) {
+        errorEl.textContent = "Connection to server failed.";
+        errorEl.style.display = "block";
+      }
+    }
+
+    async function fetchPersonalizedBriefing(forceRegen = false) {
+      const contentEl = document.getElementById("briefing-content");
+      const prefChipsEl = document.getElementById("briefing-pref-list");
+      
+      // Update topics list in UI
+      prefChipsEl.innerHTML = "";
+      currentUser.preferences.forEach(t => {
+        const chip = document.createElement("div");
+        chip.className = "pref-chip";
+        chip.textContent = t;
+        prefChipsEl.appendChild(chip);
+      });
+      
+      // Set date display
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById("briefing-date-lbl").textContent = new Date().toLocaleDateString("en-US", options);
+      
+      // Show loading if empty or forced
+      if (forceRegen || contentEl.querySelector(".loading-state") !== null) {
+        contentEl.innerHTML = `
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <span>${forceRegen ? "Regenerating briefing using live news..." : "Retrieving your news intelligence..."}</span>
+          </div>
+        `;
+        document.getElementById("articles-feed").innerHTML = "";
+      }
+      
+      try {
+        const res = await fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "get_personalized_news",
+            username: currentUser.username,
+            token: currentUser.token
+          })
+        });
+        
+        const data = await res.json();
+        const body = typeof data.body === "string" ? JSON.parse(data.body) : data;
+        
+        if (res.status === 200) {
+          // Format RAG answer
+          contentEl.innerHTML = formatBriefingMarkdown(body.answer || "");
+          if (body.cached) {
+            const badge = document.createElement("div");
+            badge.className = "cached-badge";
+            badge.style.marginTop = "16px";
+            badge.innerHTML = "⚡ cached digest";
+            contentEl.appendChild(badge);
+          }
+          
+          // Render Articles Feed
+          renderArticlesFeed(body.articles || []);
+        } else {
+          contentEl.innerHTML = `<div class="auth-error" style="display:block;">Error: ${body.error || "Failed to fetch briefing."}</div>`;
+        }
+      } catch (err) {
+        contentEl.innerHTML = `<div class="auth-error" style="display:block;">Failed to connect to backend server. Please check your network.</div>`;
+      }
+    }
+
+    function formatBriefingMarkdown(text) {
+      let html = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\n\n/g, "§§")
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        
+      const blocks = html.split("§§");
+      let output = "";
+      let inList = false;
+      
+      blocks.forEach(block => {
+        const trimmed = block.trim();
+        if (trimmed.startsWith("###")) {
+          if (inList) { output += "</ul>"; inList = false; }
+          output += `<h3>${trimmed.replace(/^###\s*/, "")}</h3>`;
+        } else if (trimmed.startsWith("-") || trimmed.startsWith("*")) {
+          if (!inList) { output += "<ul>"; inList = true; }
+          output += `<li>${trimmed.replace(/^[-*]\s*/, "")}</li>`;
+        } else if (trimmed) {
+          if (inList) { output += "</ul>"; inList = false; }
+          output += `<p>${trimmed}</p>`;
+        }
+      });
+      
+      if (inList) output += "</ul>";
+      return output;
+    }
+
+    function renderArticlesFeed(articles) {
+      const feed = document.getElementById("articles-feed");
+      feed.innerHTML = "";
+      
+      if (articles.length === 0) {
+        feed.innerHTML = "<p style='color:var(--text-3); font-size:14px; grid-column: 1/-1;'>No source articles matching your preferences were ingested today.</p>";
+        return;
+      }
+      
+      articles.forEach(art => {
+        const card = document.createElement("div");
+        card.className = "article-card";
+        
+        let displayTopic = art.topic;
+        if (art.topic === "science and technology") displayTopic = "Science & Tech";
+        if (art.topic === "international relations India") displayTopic = "India Intl. Relations";
+        if (art.topic === "Computer Science trending") displayTopic = "Computer Science";
+        
+        card.innerHTML = `
+          <div class="article-header">
+            <span class="article-topic">${escHtml(displayTopic)}</span>
+            <h3 class="article-title">${escHtml(art.title)}</h3>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div class="article-meta">
+              <span>${escHtml(art.source)}</span>
+              <span>${escHtml(art.date)}</span>
+            </div>
+            <a href="${escHtml(art.url)}" class="article-link" target="_blank" rel="noopener">
+              Read source article ↗
+            </a>
+          </div>
+        `;
+        feed.appendChild(card);
+      });
+    }
+
+    // ── main submit ────────────────────────────────────────────────
     const input = document.getElementById("qinput");
     const sendBtn = document.getElementById("sendbtn");
     const conv = document.getElementById("conv");
@@ -1288,7 +2679,6 @@
         }
 
         if (charIdx < para.length) {
-          // insert char before cursor
           const chunk = para.slice(charIdx, charIdx + 3);
           cursor.insertAdjacentHTML("beforebegin", chunk);
           charIdx += 3;
@@ -1377,10 +2767,15 @@
       setLoading(false);
     }
 
-    // ── main submit ────────────────────────────────────────────────
     async function submitQuery() {
       const q = input.value.trim();
       if (!q || isLoading) return;
+      
+      const isAdmin = currentUser.username.toLowerCase() === "admin";
+      if (!isAdmin && currentUser.queries_used >= 5) {
+        checkQueryLockout();
+        return;
+      }
 
       setLoading(true);
       appendUserMsg(q);
@@ -1392,28 +2787,48 @@
         const res = await fetch(API, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: q, mode: currentMode }),
+          body: JSON.stringify({ 
+            action: "query",
+            query: q, 
+            mode: currentMode,
+            username: currentUser.username,
+            token: currentUser.token
+          }),
         });
         const data = await res.json();
         const body = typeof data.body === "string" ? JSON.parse(data.body) : data;
 
         removeThinking();
-        appendAssistantMsg(
-          body.answer || "No answer returned.",
-          body.sources || [],
-          body.cached || false,
-          body.mode || currentMode,
-        );
+        
+        if (res.status === 200) {
+          if (body.queries_used !== undefined) {
+            currentUser.queries_used = body.queries_used;
+            localStorage.setItem("newsrag_session", JSON.stringify(currentUser));
+            updateQuotaDisplay();
+          }
+          
+          appendAssistantMsg(
+            body.answer || "No answer returned.",
+            body.sources || [],
+            body.cached || false,
+            body.mode || currentMode,
+          );
+        } else {
+          appendAssistantMsg(`Error: ${body.error || "Something went wrong."}`, [], false, "answer");
+          setLoading(false);
+        }
       } catch (err) {
         removeThinking();
-        appendAssistantMsg("Something went wrong. Please try again.", [], false, "answer");
+        appendAssistantMsg("Something went wrong. Please check your connection and try again.", [], false, "answer");
         setLoading(false);
       }
     }
 
     function setLoading(val) {
       isLoading = val;
-      sendBtn.disabled = val || input.value.trim() === "";
+      const isAdmin = currentUser && currentUser.username.toLowerCase() === "admin";
+      const isLocked = currentUser && !isAdmin && currentUser.queries_used >= 5;
+      sendBtn.disabled = val || isLocked || input.value.trim() === "";
     }
 
     function scrollBottom() {
@@ -1426,6 +2841,10 @@
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;");
+    }
+
+    function openDiagramLink() {
+      window.open("https://github.com/aditya0589/NewsRAG", "_blank");
     }
   </script>
 </body>
