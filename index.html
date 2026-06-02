@@ -2344,7 +2344,7 @@
       document.querySelector(".input-area").style.display = tab === "chat" ? "block" : "none";
       document.querySelector(".arch").style.display = tab === "chat" ? "block" : "none";
       document.getElementById("header-mode-toggle").style.display = tab === "chat" ? "flex" : "none";
-      document.getElementById("about-page").style.display = tab === "about" ? "none" : "flex";
+      document.getElementById("about-page").style.display = tab === "about" ? "flex" : "none";
       
       if (tab === "briefing" && currentUser) {
         fetchPersonalizedBriefing();
